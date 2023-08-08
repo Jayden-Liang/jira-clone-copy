@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState,useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 export type Place = "right" | "top" | "left" | "bottom";
@@ -23,30 +23,37 @@ type Positions = {
     [key in Place]: FixedFields;
 }
 
-const Tooltip: React.FC<Props> = ({ renderContent, renderItem, place,offset }) => {
+const Tooltip: React.FC<Props> = ({ renderContent, renderItem, place, offset }) => {
     const ItemRef = useRef<HTMLDivElement>(null);
     const fixedRef = useRef<HTMLDivElement>(null);
     const [show, setShow] = useState<boolean>(false)
+    useEffect(()=>{
+        console.log('重载')
+    },[])
+    console.log('repaint')
 
     useEffect(() => {
-        if (show) {
+        // console.log('对比', show,place, offset)
+        console.log('fired')
+        const setPosition = () => {
             const ItemPosition = ItemRef.current?.getBoundingClientRect();
             const FixedPosition = fixedRef.current?.getBoundingClientRect();
-            console.log('ITEMPOSITION 问号', ItemPosition)
-            console.log('tooltip', FixedPosition)
+            console.log('set')
             const position = calPosition(place, FixedPosition, ItemPosition, 10, offset)
-            console.log('position', position)
-
             if (fixedRef.current != null) {
                 fixedRef.current.style.top = position.top
                 fixedRef.current.style.left = position.left
             }
         }
+        if (show) {
+            setPosition()
+        }
 
-    }, [show,place,offset])
+    }, [show, place, offset])
     // 根据所靠元素的位置计算tooltip的位置
     //
     const calPosition = (place: Place, tooltipItem: DOMRect | undefined, accompanyItem: DOMRect | undefined, gap: number, offset: Offset) => {
+        console.log('right',accompanyItem!.right)
         const position: Positions = {
             'right': {
                 top: accompanyItem!.top + accompanyItem!.height / 2 - tooltipItem!.height / 2 + (offset.top ? offset.top : 0) + 'px',

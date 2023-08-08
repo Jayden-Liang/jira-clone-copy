@@ -4,6 +4,9 @@ import AddIcon from "../Ui/AddIcon"
 import QuestionIcon from "../Ui/QuestionIcon"
 import { useState } from 'react'
 import AboutTooltip from "./utils/AboutToolTip"
+// @ts-ignore
+import styles from './NavBarLeft.module.scss'
+
 
 const defaultWith = '80px'
 
@@ -16,7 +19,10 @@ type ItemProps = {
 const Item: React.FC<ItemProps> = ({ renderIcon, textStyle, itemText }) => {
     return <div className="flex box-border items-center p-2 pl-5 hover:bg-slate-100/10 cursor-pointer">
         {renderIcon()}
-        <div className="whitespace-nowrap font-bold text-xs text-white weight-bold" style={textStyle}>
+        <div 
+        // className="whitespace-nowrap font-bold text-xs text-white weight-bold" style={textStyle}
+          className={[`whitespace-nowrap font-bold text-xs text-white weight-bold`,`${styles.textStyle}`].join(' ')}
+        >
             {itemText}
         </div>
     </div>
@@ -25,12 +31,15 @@ const Item: React.FC<ItemProps> = ({ renderIcon, textStyle, itemText }) => {
 
 const NavbarLeft: React.FC = () => {
     const [expandWith, setExpandWith] = useState(defaultWith)
+    const [hover, setHover] = useState(false)
     const handleMouseIn = () => {
-        setExpandWith('180px')
+        // setExpandWith('180px')
+        setHover(true)
     }
 
     const handleMouseOut = () => {
-        setExpandWith(defaultWith)
+        // setExpandWith(defaultWith)
+        setHover(false)
     }
     //因为tailwind.css默认不支持动态class
     const style = {
@@ -38,17 +47,19 @@ const NavbarLeft: React.FC = () => {
         transition: 'ease-out 0.1s',
     }
     const textStyle: { [key: string]: string } = {
-        visibility: expandWith === defaultWith ? "hidden" : "visible",
-        opacity: expandWith === defaultWith ? "0" : "1",
+        visibility: !hover ? "hidden" : "visible",
+        opacity: !hover ? "0" : "1",
         position: 'relative',
-        left: expandWith === defaultWith ? "0px" : "10px",
+        left: !hover ? "0px" : "10px",
         transition: 'all ease-out 0.07s'
     }
     return (
-        <div style={style}
-            className='bg-[#0747A6] h-screen fixed '
-            onMouseEnter={handleMouseIn}
-            onMouseLeave={handleMouseOut}
+        <div 
+            // style={style}
+            // className=''
+            className={[`bg-[#0747A6] h-screen fixed`,`${styles.navbarleft}`].join(' ')}
+            // onMouseEnter={handleMouseIn}
+            // onMouseLeave={handleMouseOut}
         >
             <div className="my-3 p-5 pb-3" >
                 <Logo size='28px' />

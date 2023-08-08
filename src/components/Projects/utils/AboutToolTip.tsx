@@ -1,6 +1,7 @@
 
 import Tooltip from "../../Shared/Tooltip/Tooltip";
 import { Place, Offset } from "../../Shared/Tooltip/Tooltip";
+import React from 'react';
 
 type Props={
     renderItem: Function,
@@ -21,4 +22,4 @@ const AboutTooltip: React.FC<Props> = (props) => {
 
 }
 
-export default AboutTooltip;
+export default React.memo(AboutTooltip);
